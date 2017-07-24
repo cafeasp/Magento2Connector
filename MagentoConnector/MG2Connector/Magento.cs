@@ -3,10 +3,51 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using RestSharp;
+using Newtonsoft.Json;
 
 namespace MG2Connector
 {
     public class Magento
     {
+       private RestClient Client { get; set; }
+        private string Token { get; set; }
+
+        public Magento(string magentoUrl)
+        {
+            Client = new RestClient(magentoUrl);           
+        }
+        public Magento(string magentoUrl,string token)
+        {
+            Client = new RestClient(magentoUrl);
+        }
+
+        public string GetAdminToken(string userName, string passWord)
+        {
+            var request = CreateRequest("/rest/V1/integration/admin/token", Method.POST);
+            var user = new Credentials();
+            user.username = userName;
+            user.password = passWord;
+
+            string json = JsonConvert.SerializeObject(user, Formatting.Indented);
+
+            request.AddParameter("application/json", json, ParameterType.RequestBody);
+
+            var response = Client.Execute(request);
+            if(response.StatusCode == System.Net.HttpStatusCode.OK)
+            {
+                return response.Content;
+            }else
+            {
+                return "";
+            }
+        }
+
+        private RestRequest CreateRequest(string endPoint,Method method)
+        {
+            var request = new RestRequest(endPoint, method);
+            request.RequestFormat = DataFormat.Json;
+            return request;
+        }
     }
 }

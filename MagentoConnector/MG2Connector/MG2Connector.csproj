@@ -49,6 +49,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Credentials.cs" />
+    <Compile Include="M2Product.cs" />
     <Compile Include="Magento.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

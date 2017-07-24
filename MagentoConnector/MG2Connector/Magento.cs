@@ -49,5 +49,28 @@ namespace MG2Connector
             request.RequestFormat = DataFormat.Json;
             return request;
         }
+
+        public void GetSku(string token,string sku)
+        {
+            var request = CreateRequest("/rest/V1/products/" + sku, Method.GET, token);
+
+            var response = Client.Execute(request);
+
+            if(response.StatusCode == System.Net.HttpStatusCode.OK)
+            {
+                M2Product product = JsonConvert.DeserializeObject<M2Product>(response.Content);
+
+            }
+
+        }
+
+        private RestRequest CreateRequest(string endPoint, Method method,string token)
+        {
+            var request = new RestRequest(endPoint, method);
+            request.RequestFormat = DataFormat.Json;
+            request.AddHeader("Authorization", "Bearer " + token);
+            request.AddHeader("Accept", "application/json");
+            return request;
+        }
     }
 }

@@ -20,6 +20,7 @@ namespace MG2Connector
         public Magento(string magentoUrl,string token)
         {
             Client = new RestClient(magentoUrl);
+            Token = token;
         }
 
         public string GetAdminToken(string userName, string passWord)
@@ -64,6 +65,30 @@ namespace MG2Connector
 
         }
 
+        public void CreateCategory(string categoryName)
+        {
+            var request = CreateRequest("/rest/V1/categories", Method.POST, Token);
+            var cat = new ProductCategory();
+            var category = new Category();
+            category.Name = categoryName;
+
+            cat.Category = category;
+
+            string json = JsonConvert.SerializeObject(cat, Formatting.Indented);
+
+            request.AddParameter("application/json", json, ParameterType.RequestBody);
+
+            var response = Client.Execute(request);
+            if (response.StatusCode == System.Net.HttpStatusCode.OK)
+            {
+                //return response.Content;
+            }
+            else
+            {
+                //return "";
+            }
+
+        }
         private RestRequest CreateRequest(string endPoint, Method method,string token)
         {
             var request = new RestRequest(endPoint, method);

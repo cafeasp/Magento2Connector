@@ -89,6 +89,23 @@ namespace MG2Connector
             }
 
         }
+
+        public bool UpdateProductQty(SkuUpdate update,string skuName)
+        {
+            var request = CreateRequest("/rest/V1/products/" + skuName + "/stockItems/" + update.StockItem.ItemId, Method.PUT, Token);
+            string json = JsonConvert.SerializeObject(update, Formatting.Indented);
+
+            request.AddParameter("application/json", json, ParameterType.RequestBody);
+
+            var result = Client.Execute(request);
+            if(result.StatusCode == System.Net.HttpStatusCode.OK)
+            {
+                return true;
+            }else
+            {
+                return false;
+            }
+        }
         private RestRequest CreateRequest(string endPoint, Method method,string token)
         {
             var request = new RestRequest(endPoint, method);
